@@ -10,7 +10,7 @@ function saveTimeEntry() {
         localStorage.setItem(project, createSubEntry());
     }
     // wir brauchen noch eine success message, fail message und ein clearing der ganzen Elemente
-    addSuccessMessage();
+    addSuccessMessage("Erfolgreich gespeichert!");
     //clear form?
 }
 
@@ -18,13 +18,17 @@ function sync() {
     
     var ident = checkIdentifier();
     console.log("Sync for " + ident);
-    var content = 
+    var content = getContentFromLocalStore();
     $.ajax({
         url: 'http://localhost:8080/sync',
         type: 'POST',
         data: 'ident=' + ident + '&content=' + content, // or $('#myform').serializeArray()
-        success: function() { alert('POST completed'); }
+        success: function() { addSuccessMessage("Sync erfolgreich abgeschlossen"); }
     });
+}
+
+function getContentFromLocalStore() {
+    return "content";
 }
 
 function checkIdentifier() {
@@ -51,11 +55,11 @@ function createIdent() {
     
 }
 
-function addSuccessMessage() {
+function addSuccessMessage(message) {
     console.log("successmessage");
     var success = document.createElement('div');
     success.className = "alert alert-success";
-    success.innerHTML = "Erfolgreich gespeichert!";
+    success.innerHTML = message;
     var root = document.getElementById("jumbo");
     root.appendChild(success);
 }
@@ -73,7 +77,7 @@ function createSubEntry() {
 }
 
 function readTimeEntries() {
-    console.log("found " + (localStorage.length -1) + " projects for syTim"); //special ident ... -1 ;-)
+    console.log("found " + (localStorage.length -1) + " projects for syTim"); //special 'ident' ... -1 ;-)
     for (var i = 0; i < localStorage.length; i++) {
         var key = localStorage.key(i);
         if(key.toString() !== 'ident') {
