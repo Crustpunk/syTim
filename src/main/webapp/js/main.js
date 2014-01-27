@@ -1,3 +1,5 @@
+var syncContent = "";
+
 function saveTimeEntry() {
     //validation????
     var project = document.getElementById("project").value;
@@ -18,17 +20,21 @@ function sync() {
     
     var ident = checkIdentifier();
     console.log("Sync for " + ident);
-    var content = getContentFromLocalStore();
+    getContentFromLocalStore();
+    syncContent = JSON.stringify(syncContent);
     $.ajax({
         url: 'http://localhost:8080/sync',
         type: 'POST',
-        data: 'ident=' + ident + '&content=' + content, // or $('#myform').serializeArray()
-        success: function() { addSuccessMessage("Sync erfolgreich abgeschlossen"); }
+        data: 'ident=' + ident + '&content=' + syncContent, // or $('#myform').serializeArray()
+        success: function() { addSuccessMessage("Sync erfolgreich!"); }
     });
+    syncSuccess = "";
 }
 
 function getContentFromLocalStore() {
-    return "content";
+    
+    return readTimeEntries(returnTimeEntries);
+    
 }
 
 function checkIdentifier() {
@@ -76,15 +82,25 @@ function createSubEntry() {
     return JSON.stringify(timeEntryObject);
 }
 
-function readTimeEntries() {
+function readTimeEntries(toBeCalled) {
     console.log("found " + (localStorage.length -1) + " projects for syTim"); //special 'ident' ... -1 ;-)
     for (var i = 0; i < localStorage.length; i++) {
         var key = localStorage.key(i);
         if(key.toString() !== 'ident') {
             var data = localStorage.getItem(key);
-            renderTimeEntries(key, data);
+            toBeCalled(key, data);
         }
     }
+}
+
+function returnTimeEntries(key, data) {
+    console.log("read time entries to sync em: " + data);
+    syncContent += "|{";
+    syncContent += key;
+    syncContent += ":";
+    syncContent += data;
+    syncContent += "}";//we need our proto
+    
 }
 
 function renderTimeEntries(key, data) {
@@ -144,6 +160,5 @@ function renderTimeEntries(key, data) {
     root.appendChild(panel);
 
 }
-
 
 
