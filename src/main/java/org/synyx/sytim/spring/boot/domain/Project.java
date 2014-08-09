@@ -1,7 +1,7 @@
 /*
  * 27.07.2014
  */
-package org.synyx.samples.spring.boot.domain;
+package org.synyx.sytim.spring.boot.domain;
 
 import org.neo4j.graphdb.Direction;
 
