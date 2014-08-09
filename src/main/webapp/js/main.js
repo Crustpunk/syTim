@@ -1,3 +1,8 @@
+/**
+ * 
+ * J.Arrasz helper JS Methods for sytim.
+ */
+
 var syncContent = "";
 
 /**
@@ -8,13 +13,14 @@ var syncContent = "";
 function saveTimeEntry() {
     //validation????
     var project = document.getElementById("project").value;
-
     if (localStorage.getItem(project)) {// this project is already saved
-        var projectData = localStorage.getItem(project);
-        localStorage.setItem(project, projectData + "|" + createSubEntry());
+        var projectData = {project:project, timeentries:[localStorage.getItem(project)]};
+        console.log("debug: " + projectData);
+        projectData.timeentries += createSubEntry();
+        localStorage.setItem(project, JSON.stringify(projectData));
     } else { //first entry for this project
-
-        localStorage.setItem(project, createSubEntry());
+        var projectData = {project:project, timeentries:[createSubEntry()]};
+        localStorage.setItem(project, JSON.stringify(projectData));
     }
     // wir brauchen noch eine success message, fail message und ein clearing der ganzen Elemente
     addSuccessMessage("Zeit erfolgreich gespeichert!");
@@ -32,10 +38,13 @@ function sync() {
     console.log("Sync for " + ident);
     getContentFromLocalStore();
     syncContent = JSON.stringify(syncContent);
+    console.log("start syncing now...");
+    console.log(syncContent);
     $.ajax({
         url: 'http://localhost:8080/sync',
         type: 'POST',
         datatype: 'json',
+        contenttype: 'application/json',
         data: 'ident=' + ident + '&content=' + syncContent, // or $('#myform').serializeArray()
         success: function(response) {
             createSyncSuccess(response);
@@ -146,7 +155,7 @@ function createSubEntry() {
     var desc = document.getElementById("description").value;
     var timeEntryObject = {when: when, from: from, to: to, desc: desc};
     console.log("added a time entry for syTim");
-    return JSON.stringify(timeEntryObject);
+    return timeEntryObject;
 }
 
 /**
@@ -175,7 +184,7 @@ function readTimeEntries(toBeCalled) {
  */
 function returnTimeEntries(key, data) {
     console.log("read time entries to sync em: " + data);
-    syncContent += "|{";
+    syncContent += "{";
     syncContent += key;
     syncContent += ":";
     syncContent += data;
