@@ -1,6 +1,5 @@
 package org.synyx.sytim.spring.boot;
 
-import java.util.Arrays;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -15,7 +14,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 
 @Configuration
 @EnableAutoConfiguration
-@EnableNeo4jRepositories(basePackages = "org.synyx.samples.spring.boot.domain")
+@EnableNeo4jRepositories(basePackages = "org.synyx.samples.spring.boot.repo")
 @Import(RepositoryRestMvcConfiguration.class)
 @ComponentScan
 public class SyTim extends Neo4jConfiguration {
@@ -23,15 +22,6 @@ public class SyTim extends Neo4jConfiguration {
     public static void main(String[] args) {
 
         ApplicationContext ctx = SpringApplication.run(SyTim.class, args);
-
-        System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-
-        for (String beanName : beanNames) {
-            System.out.println(beanName);
-        }
     }
 
     @Bean
