@@ -14,9 +14,10 @@ function saveTimeEntry() {
     //validation????
     var project = document.getElementById("project").value;
     if (localStorage.getItem(project)) {// this project is already saved
-        var projectData = {project:project, timeentries:[localStorage.getItem(project)]};
-        console.log("debug: " + projectData);
-        projectData.timeentries += createSubEntry();
+        var projectData = JSON.parse(localStorage.getItem(project));
+        
+        projectData.timeentries.push(createSubEntry());
+        
         localStorage.setItem(project, JSON.stringify(projectData));
     } else { //first entry for this project
         var projectData = {project:project, timeentries:[createSubEntry()]};
@@ -37,21 +38,31 @@ function sync() {
     var ident = checkIdentifier();
     console.log("Sync for " + ident);
     getContentFromLocalStore();
-    syncContent = JSON.stringify(syncContent);
-    console.log("start syncing now...");
-    console.log(syncContent);
+    transformSyncContent();
+    //syncContent = JSON.stringify(syncContent);
+    
     $.ajax({
         url: 'http://localhost:8080/sync',
         type: 'POST',
         datatype: 'json',
-        contenttype: 'application/json',
-        data: 'ident=' + ident + '&content=' + syncContent, // or $('#myform').serializeArray()
+        contentType: 'application/json',
+        data: syncContent, // or $('#myform').serializeArray()
         success: function(response) {
             createSyncSuccess(response);
         }
 
     });
     syncSuccess = "";
+}
+
+function transformSyncContent() {
+    //we need to create a JSON String corresponding to backend entities.
+    var finalSyncContent;
+    //we create the projects JSON
+    finalSyncContent = '{\"ident\":\"abcde\" , \"projects\": [' + syncContent + ']}';
+    
+    syncContent = finalSyncContent;
+    console.log(syncContent);
 }
 
 /**
@@ -184,12 +195,11 @@ function readTimeEntries(toBeCalled) {
  */
 function returnTimeEntries(key, data) {
     console.log("read time entries to sync em: " + data);
-    syncContent += "{";
-    syncContent += key;
-    syncContent += ":";
+//    syncContent += "{";
+//    syncContent += key;
+//    syncContent += ":";
+//    syncContent += data;
     syncContent += data;
-    syncContent += "}";//we need our proto
-
 }
 
 /**
@@ -200,17 +210,16 @@ function returnTimeEntries(key, data) {
  * @returns {undefined}
  */
 function renderTimeEntries(key, data) {
-    console.log("try to render all projectdata for " + key);
+    data = JSON.parse(data);
+    console.log(data);
     var root = document.getElementById("projectview");
-
-    data = data.split("|");
 
     var panel = document.createElement('div');
     panel.className = "panel panel-info";
 
     var panelHeading = document.createElement('p');
     panelHeading.className = "panel-heading";
-    panelHeading.innerHTML = key;
+    panelHeading.innerHTML = data.project;
 
     panel.appendChild(panelHeading);
 
@@ -219,30 +228,28 @@ function renderTimeEntries(key, data) {
 
     var tBody = document.createElement('tbody');
     panelBody.appendChild(tBody);
-
-    //from here we should iterate
-    for (var i = 0; i < data.length; i++) {
-        var tmp = JSON.parse(data[i]);
-        console.log(tmp);
+    
+    for (var i = 0; i < data.timeentries.length; i++) {
+        
         var bodyLine = document.createElement('tr');
         tBody.appendChild(bodyLine);
 
         var bodyWhen = document.createElement('td');
         bodyWhen.className = "col-xs-2";
-        bodyWhen.innerHTML = tmp.when; //"23.11.2013";
+        bodyWhen.innerHTML = data.timeentries[i].when; //"23.11.2013";
 
 
         var bodyFrom = document.createElement('td');
         bodyFrom.className = "col-xs-2";
-        bodyFrom.innerHTML = tmp.from; //"11:15";
+        bodyFrom.innerHTML = data.timeentries[i].from; //"11:15";
 
         var bodyTo = document.createElement('td');
         bodyTo.className = "col-xs-2";
-        bodyTo.innerHTML = tmp.to; //"13:15";
+        bodyTo.innerHTML = data.timeentries[i].to; //"13:15";
 
         var bodyDesc = document.createElement('td');
         bodyDesc.className = "col-xs-6";
-        bodyDesc.innerHTML = tmp.desc; //"a description";
+        bodyDesc.innerHTML = data.timeentries[i].desc; //"a description";
 
         bodyLine.appendChild(bodyWhen);
         bodyLine.appendChild(bodyFrom);
