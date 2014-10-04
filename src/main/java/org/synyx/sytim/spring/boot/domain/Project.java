@@ -3,6 +3,8 @@
  */
 package org.synyx.sytim.spring.boot.domain;
 
+import java.util.Set;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -18,17 +20,20 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 public class Project {
 
     @GraphId
-    public int graphId;
+    public Long graphId;
+
+    public String ident;
 
     public String project;
 
-//    @RelatedTo(type = "TIMEENTRY", direction = Direction.OUTGOING)
-//    @Fetch
-//    public Set<TimeEntry> timeentries;
     @RelatedTo(type = "TIMEENTRY", direction = Direction.OUTGOING)
     @Fetch
-    public TimeEntry[] timeentries;
+    @JsonSerialize
+    public Set<TimeEntry> timeentries;
 
+//    @RelatedTo(type = "TIMEENTRY", direction = Direction.OUTGOING)
+//    @Fetch
+//    public TimeEntry[] timeentries;
 //    public void addTimeEntry(TimeEntry entry) {
 //
 //        if (timeentries == null) {

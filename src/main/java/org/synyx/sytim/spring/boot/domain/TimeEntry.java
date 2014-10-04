@@ -17,7 +17,7 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 public class TimeEntry {
 
     @GraphId
-    public int graphId;
+    public Long graphId;
 
     public String desc;
 

@@ -14,10 +14,15 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 
 @Configuration
 @EnableAutoConfiguration
-@EnableNeo4jRepositories(basePackages = "org.synyx.samples.spring.boot.repo")
+@EnableNeo4jRepositories(basePackages = "org.synyx.sytim.spring.boot")
+@ComponentScan(basePackages = {"org.synyx.sytim.spring.boot"})
 @Import(RepositoryRestMvcConfiguration.class)
-@ComponentScan
 public class SyTim extends Neo4jConfiguration {
+
+    public SyTim() {
+
+        setBasePackage("org.synyx.sytim.spring.boot.domain");
+    }
 
     public static void main(String[] args) {
 
