@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.1.4.RELEASE</version>
+        <version>1.1.7.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j-rest</artifactId>
-            <version>3.1.1.RELEASE</version>
+            <version>3.2.0.RELEASE</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -50,7 +50,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
