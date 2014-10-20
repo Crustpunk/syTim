@@ -15,8 +15,6 @@ public class Projects {
     private Project[] projects;
 
     public Projects(String json) {
-
-        System.out.println(json);
     }
 
     public Projects() {
