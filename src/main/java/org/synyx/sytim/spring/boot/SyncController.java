@@ -1,5 +1,6 @@
 package org.synyx.sytim.spring.boot;
 
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ public class SyncController {
     @Autowired
     ProjectRepository repo;
 
+    Log logger;
+
     /**
      * @param projects
      *
@@ -24,10 +27,11 @@ public class SyncController {
     @ResponseBody
     public String sync(@RequestBody Projects projects) {
 
-        System.out.println(projects.getProjects().length);
+        logger.debug(projects.getProjects().length);
 
         SyncBu syncer = new SyncBu(projects, repo);
         syncer.saveProjects();
+        logger.info("Saved " + projects.getProjects().length + " projects for ident: " + projects.getIdent());
 
         return "{\"response:ok\"}";
     }
