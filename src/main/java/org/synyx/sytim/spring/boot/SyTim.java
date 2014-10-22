@@ -1,5 +1,6 @@
 package org.synyx.sytim.spring.boot;
 
+import org.apache.commons.logging.Log;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -19,12 +20,16 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 @Import(RepositoryRestMvcConfiguration.class)
 public class SyTim extends Neo4jConfiguration {
 
+    static Log logger;
+
     public SyTim() {
 
-        setBasePackage("org.synyx.sytim.spring.boot.domain");
+        setBasePackage("org.synyx.sytim.spring.boot.domain"); // needed due a neo4j api change .. hopefully can be remoced in later versions
     }
 
     public static void main(String[] args) {
+
+        logger.info("SyTim starting");
 
         ApplicationContext ctx = SpringApplication.run(SyTim.class, args);
     }
