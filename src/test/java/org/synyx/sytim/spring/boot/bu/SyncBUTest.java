@@ -19,8 +19,6 @@ import org.synyx.sytim.spring.boot.SyTim;
  * @author Joachim Arrasz synyx GmbH & Co. KG
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-
-//@ContextConfiguration
 @SpringApplicationConfiguration(classes = SyTim.class)
 public class SyncBUTest {
 
