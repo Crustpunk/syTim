@@ -3,6 +3,7 @@
  */
 package org.synyx.sytim.spring.boot.repo;
 
+import java.util.List;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.synyx.sytim.spring.boot.domain.Project;
 
@@ -22,4 +23,12 @@ public interface ProjectRepository extends GraphRepository<Project> {
      * @return the project with this name.
      */
     Project findByProjectAndIdent(String project, String ident);
+
+    /**
+     * Finder for all projects for a given ident.
+     * 
+     * @param ident from the person
+     * @return List of projects
+     */
+    public List<Project> findByIdent(String ident);
 }
