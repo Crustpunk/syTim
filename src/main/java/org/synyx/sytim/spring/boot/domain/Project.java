@@ -3,6 +3,7 @@
  */
 package org.synyx.sytim.spring.boot.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.neo4j.graphdb.Direction;
@@ -31,15 +32,17 @@ public class Project {
     @JsonSerialize
     public Set<TimeEntry> timeentries;
 
-//    @RelatedTo(type = "TIMEENTRY", direction = Direction.OUTGOING)
-//    @Fetch
-//    public TimeEntry[] timeentries;
-//    public void addTimeEntry(TimeEntry entry) {
-//
-//        if (timeentries == null) {
-//            timeentries = new HashSet<TimeEntry>();
-//        }
-//
-//        timeentries.add(entry);
-//    }
+    /**
+     * Adds the Timentry to this project.
+     *
+     * @param entry
+     */
+    public void addTimeEntry(TimeEntry entry) {
+
+        if (timeentries == null) {
+            timeentries = new HashSet<TimeEntry>();
+        }
+
+        timeentries.add(entry);
+    }
 }
