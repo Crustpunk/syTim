@@ -8,24 +8,62 @@ var syncContent = "";
 /**
  * Saves the whole time entry received from the web form.
  * TODO: Validation?
- * @returns {undefined}
  */
 function saveTimeEntry() {
     //validation????
     var project = document.getElementById("project").value;
     if (localStorage.getItem(project)) {// this project is already saved
         var projectData = JSON.parse(localStorage.getItem(project));
-        
+
         projectData.timeentries.push(createSubEntry());
-        
+
         localStorage.setItem(project, JSON.stringify(projectData));
     } else { //first entry for this project
-        var projectData = {project:project, timeentries:[createSubEntry()]};
+        var projectData = {project: project, timeentries: [createSubEntry()]};
         localStorage.setItem(project, JSON.stringify(projectData));
     }
     // wir brauchen noch eine success message, fail message und ein clearing der ganzen Elemente
     addSuccessMessage("Zeit erfolgreich gespeichert!");
     //clear form?
+}
+
+function test(){
+    patchResponseData("", "");
+}
+
+
+function checkDataAndServer() {
+    
+    var ident = checkIdentifier();
+    var localData = getContentFromLocalStore();
+        $.ajax({
+        url: 'http://localhost:8080/data',
+        type: 'GET',
+        datatype: 'json',
+        contentType: 'application/json',
+        data: ident,
+        success: function (response) {
+            patchResponseData(response, localdata);
+            gotDatafromServer();
+        }
+
+    });
+
+    //TODO we want to check if we have an identifier
+    //we want to check if there is data with this identifier
+    //we want to inform a new user that he can pull data with a known identifier
+    //we want to grab the data, create a JSONPATCH and then show it to the user
+    //we want to interact with the user (write data and so on) 
+}
+
+function patchResponseData(response, localdata) {
+    
+    
+    var diffResult = jiff.diff(response, localData);
+}
+
+function gotDatafromServer() {
+    alert("Daten vom Server gesynced");
 }
 
 /**
@@ -38,16 +76,16 @@ function sync() {
     var ident = checkIdentifier();
     console.log("Sync for " + ident);
     getContentFromLocalStore();
-    transformSyncContent();
-    //syncContent = JSON.stringify(syncContent);
+    transformSyncContent(ident);
     
+
     $.ajax({
         url: 'http://localhost:8080/sync',
         type: 'POST',
         datatype: 'json',
         contentType: 'application/json',
-        data: syncContent, // or $('#myform').serializeArray()
-        success: function(response) {
+        data: syncContent,
+        success: function (response) {
             createSyncSuccess(response);
         }
 
@@ -55,12 +93,12 @@ function sync() {
     syncSuccess = "";
 }
 
-function transformSyncContent() {
+function transformSyncContent(ident) {
     //we need to create a JSON String corresponding to backend entities.
     var finalSyncContent;
     //we create the projects JSON
-    finalSyncContent = '{\"ident\":\"abcde\" , \"projects\": [' + syncContent + ']}';
-    
+    finalSyncContent = '{\"ident\":\"' + ident + '\" , \"projects\": [' + syncContent + ']}';
+
     syncContent = finalSyncContent;
     console.log(syncContent);
 }
@@ -74,6 +112,7 @@ function transformSyncContent() {
 function createSyncSuccess(response) {
     writeSyncedDataFromServer(response);
     addSuccessMessage("Sync erfolgreich!");
+    syncContent = "";
 
 }
 
@@ -114,7 +153,26 @@ function checkIdentifier() {
     } else {
         identifier = localStorage.getItem("ident");
     }
+    updateJumboTronWith(identifier);
     return identifier;
+}
+
+function deleteContent() {
+    localStorage.clear();
+}
+
+function updateJumboTronWith(ident) {
+    if (document.getElementById("jumbo")) {
+        
+        var jumbotron = document.getElementById("headline");
+        if(jumbotron !== null)
+            jumbotron.innerHTML = jumbotron.innerHTML + " -- Du bist " + ident;
+    }
+}
+
+function newIdent() {
+    var newIdentifier = document.getElementById("ident").value;
+    localStorage.setItem("ident", newIdentifier);
 }
 
 /**
@@ -199,7 +257,10 @@ function returnTimeEntries(key, data) {
 //    syncContent += key;
 //    syncContent += ":";
 //    syncContent += data;
-    syncContent += data;
+    if (syncContent !== undefined) {
+        syncContent += ',';
+        syncContent += data;
+    }
 }
 
 /**
@@ -228,9 +289,9 @@ function renderTimeEntries(key, data) {
 
     var tBody = document.createElement('tbody');
     panelBody.appendChild(tBody);
-    
+
     for (var i = 0; i < data.timeentries.length; i++) {
-        
+
         var bodyLine = document.createElement('tr');
         tBody.appendChild(bodyLine);
 

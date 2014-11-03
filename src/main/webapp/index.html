@@ -19,14 +19,19 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
         <div class="jumbotron" id="jumbo">
-            <h2>syTim -- die kleine Zeiterfassung</h2>
+            <h2 id="headline">syTim -- die kleine Zeiterfassung</h2>
         </div>
 
-        <form action="view.html">
-            <div class="well">
-                <button class="btn btn-info">Zeige an...</button>
-            </div>
-        </form>
+
+        <div class="well">
+
+            <button type="button" class="btn btn-info" onclick="window.location = 'view.html'">Zeige an...</button>
+            <button type="button" class="btn btn-info" onclick="window.location = 'ident.html'">Setze Ident ...</button>
+            <button type="button" class="btn btn-info" onclick="deleteContent()">Lösche alles ...</button>
+            <button type="button" class="btn btn-info" onclick="test()">Teste Patch ...</button>
+
+        </div>
+
 
         <form class="" action="#">
             <div class="well" id="formular">
@@ -92,7 +97,7 @@
                     </div>
                 </div>
                 <br/><br/>
-                    <div class="form-group">
+                <div class="form-group">
                     <div class="col-xs-3">
                         <button type="button" onclick="saveTimeEntry()" class="form-control btn btn-success">Speichern</button>
                     </div>
@@ -105,6 +110,7 @@
 
     <script src="js/vendor/jquery-1.10.1.js"></script>
     <script src="js/vendor/bootstrap.js"></script>
+    <script src="js/vendor/jiff.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
