@@ -3,6 +3,9 @@
  */
 package org.synyx.sytim.spring.boot;
 
+import java.util.List;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.synyx.sytim.spring.boot.domain.Project;
 
 /**
@@ -12,7 +15,7 @@ public class Projects {
 
     private String ident;
 
-    private Project[] projects;
+    private List projects;
 
     public Projects(String json) {
     }
@@ -39,15 +42,17 @@ public class Projects {
     /**
      * @return the projects
      */
+    @JsonDeserialize
     public Project[] getProjects() {
 
-        return projects;
+        return (Project[]) projects.toArray();
     }
 
     /**
      * @param projects the projects to set
      */
-    public void setProjects(Project[] projects) {
+    @JsonSerialize
+    public void setProjects(List projects) {
 
         this.projects = projects;
     }
