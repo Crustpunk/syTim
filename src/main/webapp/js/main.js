@@ -5,6 +5,15 @@
 
 var syncContent = "";
 
+function localDelete() {
+    alert('localDelete');
+}
+
+function remoteDelete() {
+    alert('remoteDelete');
+}
+
+
 /**
  * Saves the whole time entry received from the web form.
  * TODO: Validation?
@@ -27,16 +36,18 @@ function saveTimeEntry() {
     //clear form?
 }
 
-function test(){
-    patchResponseData("", "");
+function test() {
+    console.log('start patch');
+    patchResponseData('{"project":"Artikel 3","timeentries":[{"when":"2014-10-30","from":"08:30","to":"12:30","desc":"Finalisiert und abgeschickt"}]}',
+            '{"project":"Artikel 2","timeentries":[{"when":"2014-10-30","from":"08:30","to":"12:30","desc":"Finalisiert und abgeschickt"}]}');
 }
 
 
 function checkDataAndServer() {
-    
+
     var ident = checkIdentifier();
     var localData = getContentFromLocalStore();
-        $.ajax({
+    $.ajax({
         url: 'http://localhost:8080/data',
         type: 'GET',
         datatype: 'json',
@@ -57,9 +68,9 @@ function checkDataAndServer() {
 }
 
 function patchResponseData(response, localdata) {
-    
-    
-    var diffResult = jiff.diff(response, localData);
+
+    var jiff = require(['js/vendor/jiff.js']);
+    var diffResult = jiff.diff(response, localdata);
 }
 
 function gotDatafromServer() {
@@ -77,7 +88,7 @@ function sync() {
     console.log("Sync for " + ident);
     getContentFromLocalStore();
     transformSyncContent(ident);
-    
+
 
     $.ajax({
         url: 'http://localhost:8080/sync',
@@ -163,9 +174,9 @@ function deleteContent() {
 
 function updateJumboTronWith(ident) {
     if (document.getElementById("jumbo")) {
-        
+
         var jumbotron = document.getElementById("headline");
-        if(jumbotron !== null)
+        if (jumbotron !== null)
             jumbotron.innerHTML = jumbotron.innerHTML + " -- Du bist " + ident;
     }
 }

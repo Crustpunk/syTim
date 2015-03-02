@@ -1,6 +1,7 @@
 package org.synyx.sytim.spring.boot;
 
 import org.apache.commons.logging.Log;
+import org.jboss.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -20,7 +21,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 @Import(RepositoryRestMvcConfiguration.class)
 public class SyTim extends Neo4jConfiguration {
 
-    static Log logger;
+    static Logger logger = Logger.getLogger(SyTim.class);
 
     public SyTim() {
 
