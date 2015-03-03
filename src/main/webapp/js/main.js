@@ -269,7 +269,8 @@ function returnTimeEntries(key, data) {
 //    syncContent += ":";
 //    syncContent += data;
     if (syncContent !== undefined) {
-        syncContent += ',';
+        if(syncContent !== '')
+            syncContent += ',';
         syncContent += data;
     }
 }

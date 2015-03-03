@@ -1,3 +1,6 @@
+/nbproject/
+/nb-configuration.xml
+/target/
 *.class
 
 # Package Files #
