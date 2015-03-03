@@ -15,7 +15,7 @@ public class Projects {
 
     private String ident;
 
-    private List projects;
+    private List<Project> projects;
 
     public Projects(String json) {
     }
@@ -43,16 +43,16 @@ public class Projects {
      * @return the projects
      */
     @JsonDeserialize
-    public Project[] getProjects() {
+    public List<Project> getProjects() {
 
-        return (Project[]) projects.toArray();
+        return projects;
     }
 
     /**
      * @param projects the projects to set
      */
     @JsonSerialize
-    public void setProjects(List projects) {
+    public void setProjects(List<Project> projects) {
 
         this.projects = projects;
     }
